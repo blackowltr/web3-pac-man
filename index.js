@@ -518,7 +518,7 @@
     _COLOR = ['#F00', '#F93', '#0CF', '#F9C'],	//NPC颜色
         _COS = [1, 0, -1, 0],
         _SIN = [0, 1, 0, -1],
-        _LIFE = 1,				//玩家生命值
+        _LIFE = 5,				//玩家生命值
         _SCORE = 0,
         _LAST_LEVEL = 0,
         _SCORE_AWARD_REQUESTED = false,
@@ -559,7 +559,7 @@
                 context.textAlign = 'center';
                 context.textBaseline = 'middle';
                 context.fillStyle = '#FFF';
-                context.fillText('Pac-Man', this.x, this.y);
+                context.fillText('Web3 Pac-Man', this.x, this.y);
             }
         });
         //版权信息
@@ -1114,7 +1114,7 @@
                         context.fillText('[ Press S to request score award ]', this.x, this.y);
                     }
 
-                    if (scoreGoal) {
+                    if (levelGoal) {
                         context.fillStyle = '#ffea00';
                         context.font = '20px Helvetica';
                         context.textAlign = 'center';
