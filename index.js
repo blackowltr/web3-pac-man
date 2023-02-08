@@ -518,11 +518,13 @@
     _COLOR = ['#F00', '#F93', '#0CF', '#F9C'],	//NPC颜色
         _COS = [1, 0, -1, 0],
         _SIN = [0, 1, 0, -1],
-        _LIFE = 5,				//玩家生命值
+        _LIFE = env.initialLife,
         _SCORE = 0,
         _LAST_LEVEL = 0,
         _SCORE_AWARD_REQUESTED = false,
-        _LEVEL_AWARD_REQUESTED = false
+        _LEVEL_AWARD_REQUESTED = false,
+        _SCORE_AWARD_GOAL = env.scoreAwardGoal,
+        _LEVEL_AWARD_GOAL = env.levelAwardGoal
 
     var game = new Game('canvas');
     //启动页
@@ -620,7 +622,7 @@
                     if (text) {
                         game.nextStage();
                     } else {
-                        showNotification('Please connect your wallet first.')
+                        showNotification('Please connect your wallet first.', 'danger')
                     }
                     break;
             }
@@ -798,13 +800,13 @@
                     context.font = '18px Helvetica';
                     context.textAlign = 'left';
                     context.textBaseline = 'top';
-                    context.fillStyle = _SCORE >= 500 ? '#1aea4b' : '#FFF';
-                    context.fillText('- 500 score points', this.x + 12, this.y + 144);
+                    context.fillStyle = _SCORE >= _SCORE_AWARD_GOAL ? '#1aea4b' : '#FFF';
+                    context.fillText(`- ${_SCORE_AWARD_GOAL} score points`, this.x + 12, this.y + 144);
                     context.font = '18px Helvetica';
                     context.textAlign = 'left';
                     context.textBaseline = 'top';
-                    context.fillStyle = (index + 1) === 3 ? '#1aea4b' : '#FFF';
-                    context.fillText('- level 3', this.x + 12, this.y + 164);
+                    context.fillStyle = (index + 1) === _LEVEL_AWARD_GOAL ? '#1aea4b' : '#FFF';
+                    context.fillText(`- reach level ${_LEVEL_AWARD_GOAL}`, this.x + 12, this.y + 164);
                 }
             });
             //状态文字
@@ -1102,8 +1104,8 @@
             x: game.width / 2,
             y: game.height * .7,
             draw: function (context) {
-                const scoreGoal = _SCORE >= 500;
-                const levelGoal = (_LAST_LEVEL + 1) >= 3;
+                const scoreGoal = _SCORE >= _SCORE_AWARD_GOAL;
+                const levelGoal = (_LAST_LEVEL + 1) >= _LEVEL_AWARD_GOAL;
 
                 if (scoreGoal || levelGoal) {
                     if (scoreGoal) {
@@ -1111,7 +1113,7 @@
                         context.font = '20px Helvetica';
                         context.textAlign = 'center';
                         context.textBaseline = 'middle';
-                        context.fillText('[ Press S to request score award ]', this.x, this.y);
+                        context.fillText('[ Press S to request score coins ]', this.x, this.y);
                     }
 
                     if (levelGoal) {
@@ -1130,23 +1132,29 @@
                 case 83: //S
                     if (!_SCORE_AWARD_REQUESTED) {
                         _SCORE_AWARD_REQUESTED = true;
-                        showNotification('We send an NFT to your wallet. In a few moments you can check it in your wallet')
+                        showNotification('Starting award request');
+                        sendCoins(`${_SCORE}`, getWalletAddress()).then(() => {
+                            showNotification('We sent your coins. In a few moments you can check it in your wallet')
+                        }).catch(() => _SCORE_AWARD_REQUESTED = false)
                     } else {
-                        showNotification('You already have this score award')
+                        showNotification('You already have this score award', 'danger')
                     }
                     break;
                 case 76: //L
                     if (!_LEVEL_AWARD_REQUESTED) {
                         _LEVEL_AWARD_REQUESTED = true;
-                        showNotification('We send an NFT to your wallet. In a few moments you can check it in your wallet')
+                        showNotification('Starting award request');
+                        sendLevel3Asset(getWalletAddress()).then(() => {
+                            showNotification('We send an NFT to your wallet. In a few moments you can check it in your wallet')
+                        }).catch(() => _LEVEL_AWARD_REQUESTED = false)
                     } else {
-                        showNotification('You already have this level award')
+                        showNotification('You already have this level award', 'danger')
                     }
                     break;
                 case 13: //enter
                 case 32: //space
                     _SCORE = 0;
-                    _LIFE = 5;
+                    _LIFE = env.initialLife;
                     _LAST_LEVEL = 0;
                     _LEVEL_AWARD_REQUESTED = false;
                     _SCORE_AWARD_REQUESTED = false;

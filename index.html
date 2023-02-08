@@ -5,118 +5,8 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <link rel="shortcut icon" href="favicon.png">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <style>
-        html {
-            color: #000;
-            background: #000
-        }
-
-        body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td {
-            margin: 0;
-            padding: 0
-        }
-
-        table {
-            border-collapse: collapse;
-            border-spacing: 0
-        }
-
-        fieldset, img {
-            border: 0
-        }
-
-        address, caption, cite, code, dfn, em, strong, th, var {
-            font-style: normal;
-            font-weight: normal
-        }
-
-        ol, ul {
-            list-style: none
-        }
-
-        caption, th {
-            text-align: left
-        }
-
-        h1, h3, h3, h4, h5, h6 {
-            font-size: 100%;
-            font-weight: normal
-        }
-
-        q:before, q:after {
-            content: ''
-        }
-
-        abbr, acronym {
-            border: 0;
-            font-variant: normal
-        }
-
-        sup {
-            vertical-align: text-top
-        }
-
-        sub {
-            vertical-align: text-bottom
-        }
-
-        input, textarea, select {
-            font-family: inherit;
-            font-size: inherit;
-            font-weight: inherit;
-            *font-size: 100%
-        }
-
-        legend {
-            color: #000
-        }
-
-		body {
-			font-family: Verdana, Geneva, sans-serif;
-		}
-
-        .wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            height: 100vh;
-        }
-
-        canvas {
-            display: block;
-            background: #000;
-            border: 1px solid #fff
-        }
-
-        .mod-game .info {
-            padding: 10px 0;
-            margin-bottom: 5px;
-            line-height: 20px;
-            text-align: center;
-            color: #666;
-        }
-
-        .mod-game .info p {
-            line-height: 20px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .mod-game .intro {
-            padding: 10px 15px;
-            background: #f8f8f8;
-            border-radius: 5px;
-        }
-
-        .mod-game .intro p {
-            line-height: 22px;
-            text-indent: 2em;
-            font-size: 14px;
-            color: #666;
-        }
-    </style>
 </head>
 <body>
 <div class="wrapper">
@@ -128,9 +18,24 @@
         </div>
     </div>
 </div>
+<script>
+    const env = {
+        builderUrl: 'https://api.lakea.dev/v1',
+        gameId: '89c4df03-f6b8-4ec9-a6ee-ae19277fb220',
+        coinId: '2fdcee3c-640e-47be-a9e1-748da0f1dccf',
+        level3TemplateId: 'aa7a3ded-ed97-4a94-a030-1ad3781ae174',
+        scoreAwardGoal: 10,
+        levelAwardGoal: 1,
+        initialLife: 1,
+    }
+
+    const token = window.prompt("Insert builder auth token", "");
+    window.localStorage.setItem('pacAuthToken', token);
+</script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="utils.js"></script>
 <script src="wallet.js"></script>
+<script src="lakea-builder.js"></script>
 <script src="game.js"></script>
 <script src="index.js"></script>
 </body>
