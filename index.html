@@ -23,14 +23,15 @@
         builderUrl: 'https://api.lakea.dev/v1',
         gameId: '89c4df03-f6b8-4ec9-a6ee-ae19277fb220',
         coinId: '2fdcee3c-640e-47be-a9e1-748da0f1dccf',
-        level3TemplateId: 'aa7a3ded-ed97-4a94-a030-1ad3781ae174',
-        scoreAwardGoal: 10,
-        levelAwardGoal: 1,
-        initialLife: 1,
+        levelTemplateId: 'aa7a3ded-ed97-4a94-a030-1ad3781ae174',
+        scoreAwardGoal: 500,
+        levelAwardGoal: 3,
+        initialLife: 5,
     }
 
-    const token = window.prompt("Insert builder auth token", "");
-    window.localStorage.setItem('pacAuthToken', token);
+    const storedToken = window.localStorage.getItem('pacAuthToken');
+    const token = window.prompt("Insert Builder auth token", storedToken || '');
+    window.localStorage.setItem('pacAuthToken', token || storedToken);
 </script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="utils.js"></script>

@@ -801,7 +801,7 @@
                     context.textAlign = 'left';
                     context.textBaseline = 'top';
                     context.fillStyle = _SCORE >= _SCORE_AWARD_GOAL ? '#1aea4b' : '#FFF';
-                    context.fillText(`- ${_SCORE_AWARD_GOAL} score points`, this.x + 12, this.y + 144);
+                    context.fillText(`- min ${_SCORE_AWARD_GOAL} score points`, this.x + 12, this.y + 144);
                     context.font = '18px Helvetica';
                     context.textAlign = 'left';
                     context.textBaseline = 'top';
@@ -1108,7 +1108,7 @@
                 const levelGoal = (_LAST_LEVEL + 1) >= _LEVEL_AWARD_GOAL;
 
                 if (scoreGoal || levelGoal) {
-                    if (scoreGoal) {
+                    if (scoreGoal && !_SCORE_AWARD_REQUESTED) {
                         context.fillStyle = '#ffea00';
                         context.font = '20px Helvetica';
                         context.textAlign = 'center';
@@ -1116,7 +1116,7 @@
                         context.fillText('[ Press S to request score coins ]', this.x, this.y);
                     }
 
-                    if (levelGoal) {
+                    if (levelGoal && !_LEVEL_AWARD_REQUESTED) {
                         context.fillStyle = '#ffea00';
                         context.font = '20px Helvetica';
                         context.textAlign = 'center';
@@ -1130,7 +1130,8 @@
         stage.bind('keydown', function (e) {
             switch (e.keyCode) {
                 case 83: //S
-                    if (!_SCORE_AWARD_REQUESTED) {
+                    const scoreGoal = _SCORE >= _SCORE_AWARD_GOAL;
+                    if (scoreGoal && !_SCORE_AWARD_REQUESTED) {
                         _SCORE_AWARD_REQUESTED = true;
                         showNotification('Starting award request');
                         sendCoins(`${_SCORE}`, getWalletAddress()).then(() => {
@@ -1141,11 +1142,12 @@
                     }
                     break;
                 case 76: //L
-                    if (!_LEVEL_AWARD_REQUESTED) {
+                    const levelGoal = (_LAST_LEVEL + 1) >= _LEVEL_AWARD_GOAL;
+                    if (levelGoal && !_LEVEL_AWARD_REQUESTED) {
                         _LEVEL_AWARD_REQUESTED = true;
                         showNotification('Starting award request');
-                        sendLevel3Asset(getWalletAddress()).then(() => {
-                            showNotification('We send an NFT to your wallet. In a few moments you can check it in your wallet')
+                        sendAsset(getWalletAddress(), env.levelTemplateId).then(() => {
+                            showNotification('We sent an NFT to your wallet. In a few moments you can check it in your wallet')
                         }).catch(() => _LEVEL_AWARD_REQUESTED = false)
                     } else {
                         showNotification('You already have this level award', 'danger')

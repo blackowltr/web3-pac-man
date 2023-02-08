@@ -21,9 +21,9 @@ const sendCoins = async (amount, receiver) => {
     });
 }
 
-const sendLevel3Asset = async (receiver) => {
+const sendAsset = async (receiver, templateId) => {
     return new Promise((resolve, reject) => {
-        const url = `${env.builderUrl}/games/${env.gameId}/nfts/mint-template/${env.level3TemplateId}/async`
+        const url = `${env.builderUrl}/games/${env.gameId}/nfts/mint-template/${templateId}/async`
         return fetch(url, {
             method: 'POST',
             headers: {
