@@ -584,7 +584,7 @@
             x: game.width / 2,
             y: game.height * .68,
             draw: function (context) {
-                var text = walletAddress();
+                var text = getWalletAddress();
                 context.font = '14px/20px Helvetica';
                 context.textAlign = 'center';
                 context.textBaseline = 'middle';
@@ -598,7 +598,7 @@
             x: game.width / 2,
             y: game.height * .75,
             draw: function (context) {
-                var text = walletAddress();
+                var text = getWalletAddress();
                 if (text) {
                     context.font = '14px/20px Helvetica';
                     context.textAlign = 'center';
@@ -616,11 +616,11 @@
                     break;
                 case 13:
                 case 32:
-                    var text = walletAddress();
+                    var text = getWalletAddress();
                     if (text) {
                         game.nextStage();
                     } else {
-                        alert('Please connect your wallet first.')
+                        showNotification('Please connect your wallet first.')
                     }
                     break;
             }
@@ -1130,17 +1130,17 @@
                 case 83: //S
                     if (!_SCORE_AWARD_REQUESTED) {
                         _SCORE_AWARD_REQUESTED = true;
-                        alert('We send an NFT to your wallet. In a few moments you can check it in your wallet')
+                        showNotification('We send an NFT to your wallet. In a few moments you can check it in your wallet')
                     } else {
-                        alert('You already have this score award')
+                        showNotification('You already have this score award')
                     }
                     break;
                 case 76: //L
                     if (!_LEVEL_AWARD_REQUESTED) {
                         _LEVEL_AWARD_REQUESTED = true;
-                        alert('We send an NFT to your wallet. In a few moments you can check it in your wallet')
+                        showNotification('We send an NFT to your wallet. In a few moments you can check it in your wallet')
                     } else {
-                        alert('You already have this level award')
+                        showNotification('You already have this level award')
                     }
                     break;
                 case 13: //enter
@@ -1159,5 +1159,5 @@
 })();
 
 setTimeout(() => {
-    ConnectWallet();
+    connectWallet();
 }, 300)

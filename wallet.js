@@ -1,7 +1,3 @@
-function ConnectWallet() {
-    connect();
-}
-
 const getProvider = () => {
     if ('phantom' in window) {
         const provider = window.phantom?.solana;
@@ -14,7 +10,7 @@ const getProvider = () => {
     window.open('https://phantom.app/', '_blank');
 };
 
-const connect = async () => {
+const connectWallet = async () => {
     const provider = getProvider();
     try {
         await provider.connect();
@@ -32,7 +28,7 @@ const requestWalletConnection = async () => {
     }
 }
 
-const walletAddress = () => {
+const getWalletAddress = () => {
     const provider = getProvider();
     try {
         return provider?.publicKey?.toBase58();
