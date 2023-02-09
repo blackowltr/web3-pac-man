@@ -19,14 +19,17 @@
     </div>
 </div>
 <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode') || 'normal';
+
     const env = {
         builderUrl: 'https://api.lakea.dev/v1',
         gameId: '89c4df03-f6b8-4ec9-a6ee-ae19277fb220',
         coinId: '2fdcee3c-640e-47be-a9e1-748da0f1dccf',
         levelTemplateId: 'aa7a3ded-ed97-4a94-a030-1ad3781ae174',
-        scoreAwardGoal: 500,
-        levelAwardGoal: 3,
         initialLife: 5,
+        scoreAwardGoal: mode === 'easy' ? 100 : 500,
+        levelAwardGoal: mode === 'easy' ? 1 : 3,
     }
 
     const storedToken = window.localStorage.getItem('pacAuthToken');
