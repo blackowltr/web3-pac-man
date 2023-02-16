@@ -613,9 +613,6 @@
         //事件绑定
         stage.bind('keydown', function (e) {
             switch (e.keyCode) {
-                case 87: // W
-                    requestWalletConnection();
-                    break;
                 case 13:
                 case 32:
                     var text = getWalletAddress();
@@ -1168,6 +1165,33 @@
     game.init();
 })();
 
+function changeDifficultyMode() {
+    const params = new URLSearchParams(window.location.search);
+    let mode = params.has('mode') ? params.get('mode') : 'normal';
+    mode = mode === 'normal' ? 'easy' : 'normal';
+    params.delete('mode');
+    params.append('mode', mode);
+    window.location.search = params.toString();
+}
+
+function listenKeydown() {
+    window.document.addEventListener('keydown', (e) => {
+        switch (e.keyCode) {
+            case 82: // R
+                window.location.reload();
+                break;
+            case 87: // W
+                requestWalletConnection();
+                break;
+            case 77: // M
+                changeDifficultyMode();
+                break;
+        }
+    });
+}
+
 setTimeout(() => {
     connectWallet();
+    listenKeydown();
 }, 300)
+

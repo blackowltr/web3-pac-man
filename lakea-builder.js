@@ -5,7 +5,7 @@ const sendCoins = async (amount, receiver) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('pacAuthToken')}`
+                'Token': `${env.authCode}`
             },
             body: JSON.stringify({
                 amount,
@@ -28,7 +28,7 @@ const sendAsset = async (receiver, templateId) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('pacAuthToken')}`
+                'Token': `${env.authCode}`
             },
             body: JSON.stringify({
                 receiver
