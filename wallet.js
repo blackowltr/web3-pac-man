@@ -22,41 +22,50 @@ const connectToArtelaTestNetAutomatically = async () => {
         return web3;
     } catch (err) {
         console.error(err);
+        throw err; // Hata durumunda hatayı tekrar fırlat
     }
 };
 
 const getProvider = async () => {
     try {
         const web3 = await connectToArtelaTestNetAutomatically();
-        return web3.currentProvider;
+        const provider = web3.currentProvider;
+
+        // Metamask kontrolü ekleme
+        if (provider.isMetaMask) {
+            return provider;
+        } else {
+            throw new Error('MetaMask not detected.');
+        }
     } catch (err) {
         console.error(err);
+        throw err; // Hata durumunda hatayı tekrar fırlat
     }
 };
 
 const connectWallet = async () => {
-    const provider = await getProvider();
     try {
+        const provider = await getProvider();
         // Metamask bağlantısını sağlama
-        await provider.request({ method: "eth_requestAccounts" });
+        await provider.request({ method: "eth_accounts" });
     } catch (err) {
         console.error(err);
     }
 };
 
 const requestWalletConnection = async () => {
-    const provider = await getProvider();
     try {
+        const provider = await getProvider();
         // Metamask bağlantı talebini sağlama
-        await provider.request({ method: "eth_requestAccounts" });
+        await provider.request({ method: "eth_accounts" });
     } catch (err) {
         console.error(err);
     }
 };
 
 const getWalletAddress = async () => {
-    const provider = await getProvider();
     try {
+        const provider = await getProvider();
         // Metamask'tan cüzdan adresini al
         const accounts = await provider.request({ method: "eth_accounts" });
         return accounts[0] || '';
@@ -64,3 +73,6 @@ const getWalletAddress = async () => {
         return '';
     }
 };
+
+// Kullanıcıyı ağa bağlanmaya davet etme
+connectWallet();
