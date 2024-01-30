@@ -31,7 +31,7 @@ const getProvider = async () => {
         const web3 = await connectToArtelaTestNetAutomatically();
         const provider = web3.currentProvider;
 
-        // Metamask kontrolü ekleme
+        // MetaMask kontrolü ekleme
         if (provider.isMetaMask) {
             return provider;
         } else {
@@ -47,7 +47,7 @@ const connectWallet = async () => {
     try {
         const provider = await getProvider();
         // Metamask bağlantısını sağlama
-        await provider.request({ method: "eth_accounts" });
+        await provider.request({ method: "eth_requestAccounts" });
     } catch (err) {
         console.error(err);
     }
@@ -57,7 +57,7 @@ const requestWalletConnection = async () => {
     try {
         const provider = await getProvider();
         // Metamask bağlantı talebini sağlama
-        await provider.request({ method: "eth_accounts" });
+        await provider.request({ method: "eth_requestAccounts" });
     } catch (err) {
         console.error(err);
     }
