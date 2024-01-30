@@ -1,78 +1,85 @@
-const connectToArtelaTestNetAutomatically = async () => {
-    try {
-        const networkName = 'Artela TestNet';
-        const rpcUrl = 'https://betanet-rpc1.artela.network';
-        const chainId = '11822';
-        const symbol = 'ART';
-        const blockExplorerUrl = 'https://betanet-scan.artela.network';
-
-        // Bağlantı bilgilerini kullanarak ağa bağlanma işlemi
-        const provider = new Web3.providers.HttpProvider(rpcUrl);
-        const web3 = new Web3(provider);
-
-        // Ağa başarıyla bağlanıldı mesajını gösterme
-        console.log(`Connected to ${networkName} TestNet`);
-
-        // İsteğe bağlı olarak diğer bilgileri de kullanabilirsiniz
-        console.log('ChainID:', chainId);
-        console.log('Symbol:', symbol);
-        console.log('Block Explorer URL:', blockExplorerUrl);
-
-        // Bağlantıyı döndürme
-        return web3;
-    } catch (err) {
-        console.error(err);
-        throw err; // Hata durumunda hatayı tekrar fırlat
-    }
-};
-
-const getProvider = async () => {
-    try {
-        const web3 = await connectToArtelaTestNetAutomatically();
-        const provider = web3.currentProvider;
-
-        // MetaMask kontrolü ekleme
-        if (provider.isMetaMask) {
-            return provider;
-        } else {
-            throw new Error('MetaMask not detected.');
+document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("keydown", async (event) => {
+        if (event.key === 'w') {
+            await connectWallet();
         }
-    } catch (err) {
-        console.error(err);
-        throw err; // Hata durumunda hatayı tekrar fırlat
-    }
-};
+    });
 
-const connectWallet = async () => {
-    try {
-        const provider = await getProvider();
-        // Metamask bağlantısını sağlama
-        await provider.request({ method: "eth_requestAccounts" });
-    } catch (err) {
-        console.error(err);
-    }
-};
+    const connectToArtelaTestNetAutomatically = async () => {
+        try {
+            const networkName = 'Artela TestNet';
+            const rpcUrl = 'https://betanet-rpc1.artela.network';
+            const chainId = '11822';
 
-const requestWalletConnection = async () => {
-    try {
-        const provider = await getProvider();
-        // Metamask bağlantı talebini sağlama
-        await provider.request({ method: "eth_requestAccounts" });
-    } catch (err) {
-        console.error(err);
-    }
-};
+            const provider = new Web3.providers.HttpProvider(rpcUrl);
+            const web3 = new Web3(provider);
 
-const getWalletAddress = async () => {
-    try {
-        const provider = await getProvider();
-        // Metamask'tan cüzdan adresini al
-        const accounts = await provider.request({ method: "eth_accounts" });
-        return accounts[0] || '';
-    } catch (err) {
-        return '';
-    }
-};
+            // Kontrol: Artela ağını MetaMask'e ekleyip ekleyemediğini kontrol et
+            const isArtelaNetworkAdded = await addArtelaNetworkToMetaMask(networkName, chainId, rpcUrl);
 
-// Kullanıcıyı ağa bağlanmaya davet etme
-connectWallet();
+            if (!isArtelaNetworkAdded) {
+                throw new Error('Artela Network could not be added to MetaMask.');
+            }
+
+            console.log(`Connected to ${networkName} TestNet`);
+            return web3;
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    };
+
+    const addArtelaNetworkToMetaMask = async (networkName, chainId, rpcUrl) => {
+        try {
+            if ('ethereum' in window && window.ethereum.isMetaMask) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                        {
+                            chainId: `0x${chainId.toString(16)}`,
+                            chainName: networkName,
+                            rpcUrls: [rpcUrl],
+                            nativeCurrency: {
+                                name: 'ART',
+                                symbol: 'ART',
+                                decimals: 18,
+                            },
+                            blockExplorerUrls: ['https://betanet-scan.artela.network/'],
+                        },
+                    ],
+                });
+                return true;
+            }
+            return false;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    };
+
+    const getProvider = async () => {
+        try {
+            const web3 = await connectToArtelaTestNetAutomatically();
+            const provider = web3.currentProvider;
+
+            if (provider.isMetaMask) {
+                return provider;
+            } else {
+                throw new Error('MetaMask not detected.');
+            }
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    };
+
+    const connectWallet = async () => {
+        try {
+            const provider = await getProvider();
+            await provider.request({ method: "eth_requestAccounts" });
+            console.log('Wallet connected successfully!');
+        } catch (err) {
+            console.error(err);
+        }
+    });
+};
