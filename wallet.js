@@ -1,19 +1,22 @@
 const getProvider = () => {
-    if ('phantom' in window) {
-        const provider = window.phantom?.solana;
+    if ('ethereum' in window) { // 'phantom' yerine 'ethereum' kullanıyoruz
+        const provider = window.ethereum;
 
-        if (provider?.isPhantom) {
+        if (provider.isMetaMask) { // 'isPhantom' yerine 'isMetaMask' kullanıyoruz
             return provider;
         }
     }
 
-    window.open('https://phantom.app/', '_blank');
+    // Metamask bulunamadıysa, kullanıcıyı yönlendir veya başka bir şey yapabilirsiniz.
+    // Örneğin, kullanıcıyı Metamask indirmeye yönlendirme:
+    // window.open('https://metamask.io/download.html', '_blank');
 };
 
 const connectWallet = async () => {
     const provider = getProvider();
     try {
-        await provider.connect();
+        // Metamask bağlantısını sağlama
+        await provider.request({ method: "eth_requestAccounts" });
     } catch (err) {
         console.error(err);
     }
@@ -22,7 +25,8 @@ const connectWallet = async () => {
 const requestWalletConnection = async () => {
     const provider = getProvider();
     try {
-        await provider.request({ method: "connect" });
+        // Metamask bağlantı talebini sağlama
+        await provider.request({ method: "eth_requestAccounts" });
     } catch (err) {
         console.error(err);
     }
@@ -31,7 +35,8 @@ const requestWalletConnection = async () => {
 const getWalletAddress = () => {
     const provider = getProvider();
     try {
-        return provider?.publicKey?.toBase58();
+        // Metamask'tan cüzdan adresini al
+        return provider?.selectedAddress || '';
     } catch (err) {
         return '';
     }
